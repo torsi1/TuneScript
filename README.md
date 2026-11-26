@@ -10,15 +10,12 @@ source (.tune) ──► lexical+syntactic analysis (Lark, LALR) ──► AST
                ──► synthesis + mixing (numpy) ──► WAV
 ```
 
-Selected option from section 4 of the PDF: **C (semantic analysis + compilation)**; the "target format" is WAV
-(in addition, it also satisfies option B of the assignment: the output is a file actually usable in another system).
-
 ## Running
 
 ```
 pip install -r requirements.txt          # lark, numpy  (Python 3.10+)
 python -m tunescript examples/demo.tune                       # -> demo_pop.wav (based on the export line)
-python -m tunescript examples/demo.tune -o ki.wav --play      # with playback
+python -m tunescript examples/demo.tune -o out.wav --play      # with playback
 python -m tunescript examples/mini.tune --ast --events --roll --check   # analysis and display only
 python -m tunescript examples/demo.tune --dot ast.dot         # AST for Graphviz:  dot -Tpng ast.dot -o ast.png
 python tests/run_tests.py                                     # tests + tests/report.md
@@ -118,7 +115,7 @@ Expressions: `+ - * /`, unary `-`, parentheses, constants.
   - `UnexpectedCharacters` → **Lexical error** (e.g., `@`, `$`, `H4`);
   - `UnexpectedToken` / EOF → **Syntactic error**, with a list of expected tokens;
   - `Semantic error`: produced by `semantic.py` and `compiler.py`; each has the format `[category] line:column – message`, accompanied by the erroneous line and a `^` indicator.
-  - Stops at the first error (the assignment does not require continuing).
+  - Stops at the first error.
 
 ## 3. AST
 
@@ -151,12 +148,6 @@ Node types: `Song, Tempo, MasterVolume, Let, PatternDef, TrackDef, Export, NoteS
 Total of **41 tests**, all passing: **12 valid** inputs (V1–V12) with exact expected event lists, **14 lexical/syntactic errors** (E1–E14), **10 semantic errors** (S1–S10), **5 WAV tests** (length, 440 Hz peak via FFT, determinism, limiter, format).
 For each test, the input, expected result, and actual result appear in the console and in the `tests/report.md` table.
 
-## 7. Presentation Script (according to section 6 of the PDF)
-1. **Language:** goal, statement table, reading through `demo.tune`. 2. **Parser:** Lark/LALR, tokens, grammar, error message of `hibas.tune`.
-3. **AST:** `mini.tune --ast` and the Graphviz image; role of the traversals. 4. **Execution:** running `demo.tune`, `--events`/`--roll`, then playing the WAV.
-5. **Tests:** `python tests/run_tests.py` highlighting one valid and one invalid example. 6. **Challenges** (below).
-*Be ready for on-the-spot modifications:* tempo, key (`transpose`), rewriting a new pattern or drum pattern, then re-running.
-
 ## 8. Development Challenges and Solutions
 - **Keyword vs. identifier:** a contextual lexer would have accepted `let pattern = 3;` → basic lexer, `\b` keyword groups with priority.
 - **Separating lexical and syntactic errors:** Lark exception types + custom precheck for unterminated strings/comments.
@@ -174,5 +165,5 @@ For each test, the input, expected result, and actual result appear in the conso
 | Working compiler | `semantic.py` + `compiler.py` + `synth.py` → WAV |
 | Testing, presentation | `tests/`, Section 7 |
 
-## 10. Further Improvement Ideas (for bonus points)
+## 10. Further Improvement Ideas
 time-signature checking (`time 4/4`), parameterized patterns, `swing`, stereo panning, MIDI export, key-dependent chord names (`chord Am7`), custom LL(1) parser.
