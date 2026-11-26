@@ -1,0 +1,48 @@
+// Für Elise – 72 BPM, no bass, softer and sparser drums
+song "Fur Elise" {
+  tempo 72;
+  volume 90;
+  let chord_vol = 50;
+  let lead_vol = 42;
+  let drum_vol = 28;
+  let loops = 2;
+
+  pattern chords {
+    chord A3 minor whole vol chord_vol;
+    chord E3 major whole vol chord_vol;
+    chord A3 minor whole vol chord_vol;
+    chord E3 major whole vol chord_vol;
+  }
+
+  pattern melody {
+    E5 eighth vol lead_vol; D#5 eighth vol lead_vol;
+    E5 eighth vol lead_vol; D#5 eighth vol lead_vol;
+    E5 eighth vol lead_vol; B4 eighth vol lead_vol;
+    D5 eighth vol lead_vol; C5 eighth vol lead_vol;
+    A4 quarter vol lead_vol;
+    E3 eighth vol lead_vol; A3 eighth vol lead_vol; C4 eighth vol lead_vol;
+    E4 eighth vol lead_vol; A4 eighth vol lead_vol; B4 eighth vol lead_vol;
+    E4 eighth vol lead_vol; G#4 eighth vol lead_vol; B4 eighth vol lead_vol; C5 eighth vol lead_vol;
+    E4 eighth vol lead_vol;
+    E5 eighth vol lead_vol; D#5 eighth vol lead_vol;
+    E5 eighth vol lead_vol; D#5 eighth vol lead_vol;
+    E5 eighth vol lead_vol; B4 eighth vol lead_vol;
+    D5 eighth vol lead_vol; C5 eighth vol lead_vol;
+    A4 quarter vol lead_vol; E4 quarter vol lead_vol;
+  }
+
+  pattern beat {
+    drums {
+      kick  "x...............";
+      snare "................";
+      hat   "....x.......x...";
+      clap  "................";
+    }
+  }
+
+  track chd   with triangle volume 100      { repeat loops { play chords; } }
+  track lead  with square   volume 100      { play melody times loops; }
+  track drum  with sine     volume drum_vol { repeat 4 * loops { play beat; } }
+
+  export "examples/fur_elise.wav";
+}

@@ -1,0 +1,4 @@
+song "Wrong" {
+  tempo 120
+  track t with sine { C4 quarter; }
+}

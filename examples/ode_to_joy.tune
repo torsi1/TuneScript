@@ -1,0 +1,12 @@
+song "OdeToJoy" {
+  tempo 120;
+  pattern sor1 { E4 quarter; E4 quarter; F4 quarter; G4 quarter; G4 quarter; F4 quarter; E4 quarter; D4 quarter; }
+  pattern sor2 { C4 quarter; C4 quarter; D4 quarter; E4 quarter; E4 half; D4 eighth; D4 half; }
+  pattern sor3 { C4 quarter; C4 quarter; D4 quarter; E4 quarter; D4 half; C4 eighth; C4 half; }
+  track t with sine {
+    play sor1;
+    play sor2;
+    play sor1;
+    play sor3;
+  }
+}

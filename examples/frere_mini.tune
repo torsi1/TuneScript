@@ -1,0 +1,13 @@
+song "FrereJacques" {
+  tempo 120;
+  pattern sor1 { C4 quarter; D4 quarter; E4 quarter; C4 quarter; }
+  pattern sor2 { E4 quarter; F4 quarter; G4 half; }
+  pattern sor3 { G4 eighth; A4 eighth; G4 eighth; F4 eighth; E4 quarter; C4 quarter; }
+  pattern sor4 { C4 quarter; G3 quarter; C4 half; }
+  track t with sine {
+    play sor1 times 2;
+    play sor2 times 2;
+    play sor3 times 2;
+    play sor4 times 2;
+  }
+}

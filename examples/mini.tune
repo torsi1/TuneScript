@@ -1,0 +1,5 @@
+song "Mini" {
+  tempo 120;
+  pattern motivum { C4 quarter; E4 quarter; G4 half; }
+  track t with sine { play motivum times 2; }
+}

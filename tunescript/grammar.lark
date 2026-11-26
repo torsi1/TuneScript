@@ -1,0 +1,62 @@
+// TuneScript grammar (Lark, LALR(1), basic lexer)
+
+start: song
+
+song: "song" STRING "{" item* "}"
+
+?item: tempo_stmt | volume_stmt | let_stmt | pattern_def | track_def | export_stmt
+
+tempo_stmt:  "tempo" expr ";"
+volume_stmt: "volume" expr ";"
+let_stmt:    "let" NAME "=" expr ";"
+pattern_def: "pattern" NAME block
+track_def:   "track" NAME "with" INSTRUMENT track_vol? block
+track_vol:   "volume" expr
+export_stmt: "export" STRING ";"
+
+block: "{" statement* "}"
+
+?statement: note_stmt | rest_stmt | chord_stmt | drums_stmt
+          | play_stmt | repeat_stmt | transpose_stmt
+
+note_stmt:      NOTE duration velocity? ";"
+rest_stmt:      "rest" duration ";"
+chord_stmt:     "chord" chord_spec duration velocity? ";"
+chord_spec: NOTE QUALITY                 -> named_chord
+          | "[" NOTE ("," NOTE)* "]"     -> chord_notes
+duration:       DURATION MODIFIER?
+velocity:       "vol" expr
+drums_stmt:     "drums" "{" drum_line+ "}"
+drum_line:      DRUM STRING ";"
+play_stmt:      "play" NAME ("times" expr)? ";"
+repeat_stmt:    "repeat" expr block
+transpose_stmt: "transpose" expr ";"
+
+// expressions: + - < * / < unary - < parenthesis
+?expr: expr "+" term      -> add
+     | expr "-" term      -> sub
+     | term
+?term: term "*" factor    -> mul
+     | term "/" factor    -> div
+     | factor
+?factor: "-" factor       -> neg
+     | atom
+?atom: NUMBER             -> number
+     | NAME               -> var
+     | "(" expr ")"
+
+// tokens
+NOTE:        /[A-G][#b]?[0-9]/
+NAME:        /[a-z_][a-z0-9_]*/
+NUMBER:      /\d+(\.\d+)?/
+STRING:      /"[^"\n]*"/
+INSTRUMENT.2: /(sine|square|saw|triangle|pluck)\b/
+DRUM.2:       /(kick|snare|hat|clap)\b/
+QUALITY.2:    /(major|minor|dim|aug|maj7|min7|dom7)\b/
+DURATION.2:   /(whole|half|quarter|eighth|sixteenth)\b/
+MODIFIER.2:   /(dotted|triplet)\b/
+
+COMMENT: /\/\/[^\n]*/ | /\/\*(.|\n)*?\*\//
+%import common.WS
+%ignore WS
+%ignore COMMENT
